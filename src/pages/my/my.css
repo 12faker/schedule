@@ -1,0 +1,61 @@
+
+.input1 {
+  width: 350rpx;
+  height: 100rpx;
+  text-align: 100rpx;
+  margin: 0 auto;
+  margin-top: 300rpx;
+}
+.input2 {
+  width: 350rpx;
+  margin: 0 auto;
+}
+.input1 span {
+  width: 100rpx;
+  height: 75rpx;
+}
+.input2 span {
+  width: 100rpx;
+  height: 75rpx;
+}
+.input1 input {
+  border: 1rpx solid #333;
+}
+.input2 input {
+  border: 1rpx solid #333;
+}
+.login {
+  width: 150rpx;
+  font-size: 35rpx;
+  height: 70rpx;
+  text-align: center;
+  line-height: 70rpx;
+  background-color: aqua;
+  border-radius: 35rpx;
+  margin: auto;
+  margin-top: 20rpx;
+}
+.shouye {
+  width: 100%;
+}
+.shouye-front{
+  width: 100%;
+  height: 200rpx;
+  background-color: #00ffff;
+}
+.shouye-middle{
+  width: 100%;
+  height:300rpx;
+  background-color: rgb(255, 249, 241);
+}
+.shouye-bottom{
+  width:300rpx;
+  height:100rpx;
+  color: rgb(255,0,0);
+  font-size: 50rpx;
+  line-height: 100rpx;
+  position: fixed;
+  bottom: 100rpx;
+  left:50%;
+  margin-left:-150rpx;
+}

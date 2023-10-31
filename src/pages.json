@@ -1,16 +1,63 @@
 {
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			// uni-ui 规则如下配置
+			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+		}
+	},
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		{
+	{
+		"path": "pages/lesson/lesson",
+		"style": {
+			"navigationBarTitleText": "lesson"
+		}
+	},	
+	{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "uni-app"
 			}
+		},
+		{
+			"path": "pages/my/my",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
 		}
+		
 	],
 	"globalStyle": {
+		"navigationStyle": "custom",
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "blue",
+		"selectedColor": "black",
+		"backgroundColor": "white",
+		"borderStyle": "white",
+		"list": [
+			{
+				"pagePath": "pages/lesson/lesson",
+				"iconPath": "static/图标/dicengjiagou.png",
+				"selectedIconPath": "static/图标/dicengjiagou.png",
+				"text": "课表"
+			},
+			{
+				"pagePath": "pages/index/index",
+				"iconPath": "static/图标/shijianchuo.png",
+				"selectedIconPath": "static/图标/shijianchuo.png",
+				"text": "签到"
+			},
+			{
+				"pagePath": "pages/my/my",
+				"iconPath": "static/图标/user.png",
+				"selectedIconPath": "static/图标/user.png",
+				"text": "我的"
+			}
+		]
 	}
 }
