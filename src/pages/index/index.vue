@@ -1,20 +1,22 @@
 <template>
-  <view class=""> </view>
+  <view>
+    <div></div>
+  </view>
 </template>
 
 <script>
-export default {
+import Vue from "vue";
+export default Vue.extend({
+  components: {},
   data() {
     return {};
   },
-  onLoad() {
-    this.modifyNavHeight();
-  },
+  onLoad() {},
   onReady() {},
   mounted() {},
   methods: {},
   computed: {},
-};
+});
 </script>
 
 <style scoped></style>
