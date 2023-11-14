@@ -1,6 +1,6 @@
 <template>
   <view>
-    <div></div>
+    <div>{{ getmsg }}</div>
   </view>
 </template>
 
@@ -9,7 +9,9 @@ import Vue from "vue";
 export default Vue.extend({
   components: {},
   data() {
-    return {};
+    return {
+      getmsg: "",
+    };
   },
   onLoad() {},
   onReady() {},

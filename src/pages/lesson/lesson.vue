@@ -74,6 +74,7 @@
 import Vue from "vue";
 import fullScreenVideoAdVue from "../../../../my-project/src/pages/API/full-screen-video-ad/full-screen-video-ad.vue";
 import index from "../index/index.vue";
+import bus from "../eventBus.js";
 export default Vue.extend({
   components: {
     index,
@@ -88,6 +89,7 @@ export default Vue.extend({
       ClickClassRoom: "",
       ClickTeacher: "",
       ClickColor: "",
+      data: "",
       //存储当前周数
       NowWeek: "",
       getcolor: [
@@ -956,9 +958,20 @@ export default Vue.extend({
       ],
     };
   },
+  created() {
+    bus.$on("share", (val) => {
+      this.data = val;
+      console.log(this.data);
+      if (this.data != null) {
+        this.getLesson();
+      } else {
+        console.log("false");
+      }
+    });
+  },
   mounted() {
     this.getweek();
-    this.getLesson();
+    // this.getLesson();
   },
   computed: {},
   methods: {
@@ -1039,10 +1052,33 @@ export default Vue.extend({
     },
     //渲染课程
     getLesson() {
-      for (let i = 0; i < this.lesson.length; i++) {
+      for (let i = 0; i < this.data.length; i++) {
         //正则表达式提取出数值
+        // const sessionRegex = /(\d+)-(\d+)/;
+        // const matches = sessionRegex.exec(this.lesson[i].session);
+        // const classlong = (matches[2] - matches[1] + 1) * 100;
+        // const weekDate = this.lesson[i].weekDate;
+        // const session = parseInt(matches[1], 10);
+        // //渲染到对应位置
+        // this.cla[weekDate].lesson[(session - 1) / 2].marginTop =
+        //   (session - 1) * 100;
+        // //渲染课程名
+        // this.cla[weekDate].lesson[(session - 1) / 2].course.courseName =
+        //   this.lesson[i].courseName;
+        // //渲染课程地点
+        // this.cla[weekDate].lesson[(session - 1) / 2].course.classRoom =
+        //   "@" + this.lesson[i].classRoom;
+        // //渲染课程教师名称
+        // this.cla[weekDate].lesson[(session - 1) / 2].course.teacher =
+        //   "@" + this.lesson[i].teacher;
+        // //渲染课程长度
+        // this.cla[weekDate].lesson[(session - 1) / 2].height = classlong;
+        // //随机选取颜色
+        // const n = Math.floor(Math.random() * this.getcolor.length);
+        // this.cla[weekDate].lesson[(session - 1) / 2].color = this.getcolor[n];
+
         const sessionRegex = /(\d+)-(\d+)/;
-        const matches = sessionRegex.exec(this.lesson[i].session);
+        const matches = sessionRegex.exec(this.data[i].session);
         const classlong = (matches[2] - matches[1] + 1) * 100;
         const weekDate = this.lesson[i].weekDate;
         const session = parseInt(matches[1], 10);
@@ -1051,13 +1087,13 @@ export default Vue.extend({
           (session - 1) * 100;
         //渲染课程名
         this.cla[weekDate].lesson[(session - 1) / 2].course.courseName =
-          this.lesson[i].courseName;
+          this.data[i].courseName;
         //渲染课程地点
         this.cla[weekDate].lesson[(session - 1) / 2].course.classRoom =
-          "@" + this.lesson[i].classRoom;
+          "@" + this.data[i].classRoom;
         //渲染课程教师名称
         this.cla[weekDate].lesson[(session - 1) / 2].course.teacher =
-          "@" + this.lesson[i].teacher;
+          "@" + this.data[i].teacher;
         //渲染课程长度
         this.cla[weekDate].lesson[(session - 1) / 2].height = classlong;
         //随机选取颜色

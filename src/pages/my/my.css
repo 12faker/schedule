@@ -48,6 +48,11 @@
   height:300rpx;
   background-color: rgb(255, 249, 241);
 }
+.shouye-mid{
+  width:300rpx;
+  height:100rpx;
+  background-color: #00ffff;
+}
 .shouye-bottom{
   width:300rpx;
   height:100rpx;

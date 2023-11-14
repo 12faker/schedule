@@ -14,6 +14,7 @@
     <view class="shouye" :style="{ display: homedisplay }">
       <view class="shouye-front"></view>
       <view class="shouye-middle"></view>
+      <button class="shouye-mid" @tap="sendMsg()">同步课表</button>
       <button class="shouye-bottom" @tap="quitlogin()">退出登录</button>
     </view>
   </view>
@@ -21,6 +22,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import bus from "../eventBus.js";
 export default Vue.extend({
   components: {},
   data() {
@@ -29,6 +31,32 @@ export default Vue.extend({
       homedisplay: "none",
       usernumber: "",
       password: "",
+      data: [
+        {
+          teacher: "王老师",
+          classRoom: "大学城电子楼412A",
+          weekDate: "1",
+          session: "5-6节",
+          courseName: "计算机组成",
+          weekTimes: "9-16周",
+        },
+        {
+          teacher: "陈老师",
+          classRoom: "大学城理科南512",
+          weekDate: "1",
+          session: "9-11节",
+          courseName: "高等数学",
+          weekTimes: "9-16周",
+        },
+        {
+          teacher: "林老师",
+          classRoom: "大学城理科南210",
+          weekDate: "2",
+          session: "1-2节",
+          courseName: "程序",
+          weekTimes: "1-5周",
+        },
+      ],
     };
   },
   computed: {},
@@ -43,6 +71,9 @@ export default Vue.extend({
     quitlogin() {
       this.homedisplay = "none";
       this.logindisplay = "block";
+    },
+    sendMsg() {
+      bus.$emit("share", this.data);
     },
   },
   watch: {},
