@@ -13,47 +13,50 @@
     </view>
     <view class="empty"></view>
     <!-- 日期 -->
-    <view
-      class="date"
-      v-for="(tim, index) in time"
-      :style="{ width: tim.width }"
-      :key="index"
-    >
-      <view class="date-month"> {{ tim.week }}</view>
+    <view class="date1">
       <view
-        class="date-date"
-        :style="{ backgroundColor: tim.backgroundcolor, color: tim.color }"
+        class="date"
+        v-for="(tim, index) in time"
+        :style="{ width: tim.width }"
+        :key="index"
       >
-        {{ tim.date }}</view
-      >
+        <view class="date-month"> {{ tim.week }}</view>
+        <view
+          class="date-date"
+          :style="{ backgroundColor: tim.backgroundcolor, color: tim.color }"
+        >
+          {{ tim.date }}</view
+        >
+      </view>
     </view>
     <!-- 课程 -->
     <!-- id选择器 -->
-    <view
-      class="lesson"
-      v-for="(clas, index1) in cla"
-      :key="index1"
-      :style="{ width: clas.width }"
-    >
+    <view class="lesson1">
       <view
-        v-for="(lesso, index2) in clas.lesson"
-        @tap="signIn(index1, index2)"
-        :key="index2"
-        :id="clas.id + '-' + lesso.id"
-        :style="{
-          height: lesso.height + 'rpx',
-          marginTop: lesso.marginTop + 'rpx',
-          backgroundColor: lesso.color,
-        }"
+        class="lesson"
+        v-for="(clas, index1) in cla"
+        :key="index1"
+        :style="{ width: clas.width }"
       >
-        {{ lesso.text }}
-        {{ lesso.course.courseName }}<br />
-        {{ lesso.course.classRoom }}<br />
-        {{ lesso.course.teacher }}<br />
-        <!-- {{ lesso.course.teacher }} -->
+        <view
+          v-for="(lesso, index2) in clas.lesson"
+          @tap="signIn(index1, index2)"
+          :key="index2"
+          :id="clas.id + '-' + lesso.id"
+          :style="{
+            height: lesso.height + 'rpx',
+            marginTop: lesso.marginTop + 'rpx',
+            backgroundColor: lesso.color,
+          }"
+        >
+          {{ lesso.text }}
+          {{ lesso.course.courseName }}<br />
+          {{ lesso.course.classRoom }}<br />
+          {{ lesso.course.teacher }}<br />
+          <!-- {{ lesso.course.teacher }} -->
+        </view>
       </view>
     </view>
-
     <!--弹窗 -->
     <view class="tanchaung" :style="{ display: display1 }">
       <view class="t-tanchuang"
@@ -348,7 +351,7 @@ export default Vue.extend({
             },
             {
               id: "k",
-              text: "",
+              text: "11",
               height: "",
               marginTop: "",
               color: "",
@@ -1053,38 +1056,41 @@ export default Vue.extend({
     //渲染课程
     getLesson() {
       for (let i = 0; i < this.data.length; i++) {
-        //正则表达式提取出数值
-        // const sessionRegex = /(\d+)-(\d+)/;
-        // const matches = sessionRegex.exec(this.lesson[i].session);
-        // const classlong = (matches[2] - matches[1] + 1) * 100;
-        // const weekDate = this.lesson[i].weekDate;
-        // const session = parseInt(matches[1], 10);
-        // //渲染到对应位置
-        // this.cla[weekDate].lesson[(session - 1) / 2].marginTop =
-        //   (session - 1) * 100;
-        // //渲染课程名
-        // this.cla[weekDate].lesson[(session - 1) / 2].course.courseName =
-        //   this.lesson[i].courseName;
-        // //渲染课程地点
-        // this.cla[weekDate].lesson[(session - 1) / 2].course.classRoom =
-        //   "@" + this.lesson[i].classRoom;
-        // //渲染课程教师名称
-        // this.cla[weekDate].lesson[(session - 1) / 2].course.teacher =
-        //   "@" + this.lesson[i].teacher;
-        // //渲染课程长度
-        // this.cla[weekDate].lesson[(session - 1) / 2].height = classlong;
-        // //随机选取颜色
-        // const n = Math.floor(Math.random() * this.getcolor.length);
-        // this.cla[weekDate].lesson[(session - 1) / 2].color = this.getcolor[n];
-
         const sessionRegex = /(\d+)-(\d+)/;
+        //正则表达式提取数字
         const matches = sessionRegex.exec(this.data[i].session);
         const classlong = (matches[2] - matches[1] + 1) * 100;
-        const weekDate = this.lesson[i].weekDate;
+        const weekDate = this.data[i].weekDate;
         const session = parseInt(matches[1], 10);
+        const session1 = (session - 1) / 2;
+        console.log(session1);
         //渲染到对应位置
-        this.cla[weekDate].lesson[(session - 1) / 2].marginTop =
-          (session - 1) * 100;
+        if (session1 == 0) {
+          this.cla[weekDate].lesson[(session - 1) / 2].marginTop =
+            (session - 1) * 100;
+        } else {
+          if (session1 == 4) {
+            let k = 0;
+            for (let j = 0; j < 4; j++) {
+              if (this.cla[weekDate].lesson[j].course.courseName != "") {
+                k = j + 1;
+              }
+            }
+            console.log(k);
+            this.cla[weekDate].lesson[(session - 1) / 2].marginTop =
+              (session1 - k) * 200;
+          } else {
+            let k = 0;
+            for (let j = 0; j < session1; j++) {
+              if (this.cla[weekDate].lesson[j].course.courseName != "") {
+                k = j + 1;
+              }
+            }
+            console.log(k);
+            this.cla[weekDate].lesson[(session - 1) / 2].marginTop =
+              (session1 - k) * 200;
+          }
+        }
         //渲染课程名
         this.cla[weekDate].lesson[(session - 1) / 2].course.courseName =
           this.data[i].courseName;
