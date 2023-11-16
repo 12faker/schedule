@@ -1064,11 +1064,13 @@ export default Vue.extend({
         const session = parseInt(matches[1], 10);
         const session1 = (session - 1) / 2;
         console.log(session1);
-        //渲染到对应位置
+        //渲染到对应位置,未采用定位，根据前一个元素判断渲染到哪个位置
+        //渲染第1-2节的课
         if (session1 == 0) {
           this.cla[weekDate].lesson[(session - 1) / 2].marginTop =
             (session - 1) * 100;
         } else {
+          //渲染第9-10节的课
           if (session1 == 4) {
             let k = 0;
             for (let j = 0; j < 4; j++) {
@@ -1076,35 +1078,79 @@ export default Vue.extend({
                 k = j + 1;
               }
             }
-            console.log(k);
             this.cla[weekDate].lesson[(session - 1) / 2].marginTop =
               (session1 - k) * 200;
           } else {
-            let k = 0;
-            for (let j = 0; j < session1; j++) {
-              if (this.cla[weekDate].lesson[j].course.courseName != "") {
-                k = j + 1;
+            //渲染第2-4节和6-8节的课程
+            if (session1 == 0.5 || session1 == 2.5) {
+              let n = Math.ceil(session1);
+              if (session1 == 0.5) {
+                this.cla[weekDate].lesson[n].marginTop = session1 * 200;
+              } else {
+                let k = 0;
+                for (let i = 0; i < 2; i++) {
+                  if (this.cla[weekDate].lesson[i].course.courseName != "") {
+                    k = i + 1;
+                  }
+                }
+                this.cla[weekDate].lesson[n].marginTop = (session1 - k) * 200;
+                //修改下一个课程
+                if (this.cla[weekDate].lesson[n + 1].course.courseName != "") {
+                  this.cla[weekDate].lesson[n + 1].marginTop = 0;
+                }
+              }
+            } else {
+              let k = 0;
+              for (let j = 0; j < session1; j++) {
+                if (this.cla[weekDate].lesson[j].course.courseName != "") {
+                  k = j + 1;
+                }
+              }
+              this.cla[weekDate].lesson[(session - 1) / 2].marginTop =
+                (session1 - k) * 200;
+              let k1 = 0;
+              let j = 0;
+              for (j = 4; j > session1; j--) {
+                if (this.cla[weekDate].lesson[j].course.courseName != "") {
+                  k1 = j;
+                }
+              }
+              if (k1 != 0) {
+                const matches1 = sessionRegex.exec(
+                  this.cla[weekDate].lesson[k1].course.session
+                );
+                if (matches1[1] != 6) {
+                  this.cla[weekDate].lesson[k1].marginTop =
+                    (k1 - session1) * 200 - classlong;
+                } else {
+                  this.cla[weekDate].lesson[k1].marginTop =
+                    (k1 - session1 - parseFloat(0.5)) * 200 - classlong;
+                }
               }
             }
-            console.log(k);
-            this.cla[weekDate].lesson[(session - 1) / 2].marginTop =
-              (session1 - k) * 200;
           }
         }
         //渲染课程名
-        this.cla[weekDate].lesson[(session - 1) / 2].course.courseName =
-          this.data[i].courseName;
+        this.cla[weekDate].lesson[
+          Math.ceil((session - 1) / 2)
+        ].course.courseName = this.data[i].courseName;
         //渲染课程地点
-        this.cla[weekDate].lesson[(session - 1) / 2].course.classRoom =
-          "@" + this.data[i].classRoom;
+        this.cla[weekDate].lesson[
+          Math.ceil((session - 1) / 2)
+        ].course.classRoom = "@" + this.data[i].classRoom;
         //渲染课程教师名称
-        this.cla[weekDate].lesson[(session - 1) / 2].course.teacher =
+        this.cla[weekDate].lesson[Math.ceil((session - 1) / 2)].course.teacher =
           "@" + this.data[i].teacher;
         //渲染课程长度
-        this.cla[weekDate].lesson[(session - 1) / 2].height = classlong;
+        this.cla[weekDate].lesson[Math.ceil((session - 1) / 2)].height =
+          classlong;
+        //课程节数赋值
+        this.cla[weekDate].lesson[Math.ceil((session - 1) / 2)].course.session =
+          this.data[i].session;
         //随机选取颜色
         const n = Math.floor(Math.random() * this.getcolor.length);
-        this.cla[weekDate].lesson[(session - 1) / 2].color = this.getcolor[n];
+        this.cla[weekDate].lesson[Math.ceil((session - 1) / 2)].color =
+          this.getcolor[n];
       }
     },
     signIn(index1, index2) {
