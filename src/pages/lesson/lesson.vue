@@ -1090,7 +1090,6 @@ export default Vue.extend({
             if (parseInt(matches1[i]) == parseInt(selectWeek[0])) work++;
           }
         }
-        console.log(work);
         //-------------------------------------------------------------------------
         if (work > parseInt(0)) {
           let matches = sessionRegex.exec(this.data[i].session);
