@@ -20,7 +20,7 @@
   </view>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
 import bus from "../eventBus.js";
 export default Vue.extend({
@@ -38,7 +38,7 @@ export default Vue.extend({
           weekDate: "1",
           session: "2-4节",
           courseName: "计算机组成",
-          weekTimes: "9-16周",
+          weekTimes: "1-10周",
         },
         {
           teacher: "陈老师",
@@ -46,15 +46,7 @@ export default Vue.extend({
           weekDate: "1",
           session: "9-11节",
           courseName: "高等数学",
-          weekTimes: "9-16周",
-        },
-        {
-          teacher: "林老师",
-          classRoom: "大学城理科南211",
-          weekDate: "2",
-          session: "1-2节",
-          courseName: "程序",
-          weekTimes: "1-5周",
+          weekTimes: "2-3周,5-7周.9-16周",
         },
         {
           teacher: "胡老师",
@@ -62,7 +54,7 @@ export default Vue.extend({
           weekDate: "1",
           session: "5-6节",
           courseName: "程序",
-          weekTimes: "1-5周",
+          weekTimes: "1-5周,6周,8-12周",
         },
         {
           teacher: "王老师",
@@ -80,22 +72,29 @@ export default Vue.extend({
           courseName: "程序",
           weekTimes: "1-5周",
         },
-
         {
           teacher: "王老师",
           classRoom: "大学城理科南311",
-          weekDate: "1",
-          session: "7-8节",
+          weekDate: "3",
+          session: "3-4节",
           courseName: "计组",
-          weekTimes: "1-5周",
+          weekTimes: "1-16周",
         },
         {
           teacher: "王老师",
           classRoom: "大学城理科南311",
-          weekDate: "2",
-          session: "3-4节",
+          weekDate: "4",
+          session: "9-10节",
           courseName: "计组",
-          weekTimes: "1-5周",
+          weekTimes: "2-7周",
+        },
+        {
+          teacher: "王老师",
+          classRoom: "大学城理科南311",
+          weekDate: "5",
+          session: "5-7节",
+          courseName: "计组",
+          weekTimes: "4-5周",
         },
       ],
     };

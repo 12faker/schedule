@@ -75,7 +75,7 @@
 
 <script>
 import Vue from "vue";
-import fullScreenVideoAdVue from "../../../../my-project/src/pages/API/full-screen-video-ad/full-screen-video-ad.vue";
+//import fullScreenVideoAdVue from "../../../../my-project/src/pages/API/full-screen-video-ad/full-screen-video-ad.vue";
 import index from "../index/index.vue";
 import bus from "../eventBus.js";
 export default Vue.extend({
@@ -964,7 +964,6 @@ export default Vue.extend({
   created() {
     bus.$on("share", (val) => {
       this.data = val;
-      console.log(this.data);
       if (this.data != null) {
         this.getLesson();
       } else {
@@ -981,7 +980,6 @@ export default Vue.extend({
     //突出当前时间
     breakout(NowWeek) {
       const date1 = new Date();
-      console.log(NowWeek);
       if (NowWeek == this.NowWeek) {
         if (date1.getDay() == 0) {
           this.time[7].backgroundcolor = "#00ffff";
@@ -1028,11 +1026,10 @@ export default Vue.extend({
       this.breakout(parseInt(zhoushu) + parseInt(1));
     },
     //渲染自己切换的时间
+    //---------------------------------------------------------------------
     changeweek(e, week) {
-      console.log(e);
       // 周数下标
       const index = e.detail.value;
-      console.log(index);
       //将选择的周数渲染上去
       this.beginweek = week[index].wee;
       // 相差天数
@@ -1052,119 +1049,159 @@ export default Vue.extend({
         this.time[i + 1].date = selectdate2.getDate();
       }
       this.breakout(parseInt(index) + parseInt(1));
+      //清除原有课程，渲染新课程
+      for (let i = 1; i <= 7; i++) {
+        for (let j = 0; j < 5; j++) {
+          this.cla[i].lesson[j].height = "";
+          this.cla[i].lesson[j].marginTop = "";
+          this.cla[i].lesson[j].color = "";
+          for (let key in this.cla[i].lesson[j].course) {
+            this.cla[i].lesson[j].course[key] = "";
+          }
+        }
+      }
+      this.getLesson();
     },
     //渲染课程
+    //---------------------------------------------------------------------
     getLesson() {
       for (let i = 0; i < this.data.length; i++) {
-        const sessionRegex = /(\d+)-(\d+)/;
         //正则表达式提取数字
-        const matches = sessionRegex.exec(this.data[i].session);
-        const classlong = (matches[2] - matches[1] + 1) * 100;
-        const weekDate = this.data[i].weekDate;
-        const session = parseInt(matches[1], 10);
-        const session1 = (session - 1) / 2;
-        console.log(session1);
-        //渲染到对应位置,未采用定位，根据前一个元素判断渲染到哪个位置
-        //渲染第1-2节的课
-        if (session1 == 0) {
-          this.cla[weekDate].lesson[(session - 1) / 2].marginTop =
-            (session - 1) * 100;
-        } else {
-          //渲染第9-10节的课
-          if (session1 == 4) {
-            let k = 0;
-            for (let j = 0; j < 4; j++) {
-              if (this.cla[weekDate].lesson[j].course.courseName != "") {
-                k = j + 1;
-              }
-            }
-            this.cla[weekDate].lesson[(session - 1) / 2].marginTop =
-              (session1 - k) * 200;
+        const pattern = /\d+-\d+|\d+/g;
+        const pattern1 = /\d+/;
+        const sessionRegex = /(\d+)-(\d+)/;
+        let work = 0;
+        let matches1 = this.data[i].weekTimes.match(pattern);
+        let selectWeek = this.beginweek.match(pattern1);
+        console.log(parseInt(selectWeek[0]));
+        //判断该周是否有该课程
+        for (let i = 0; i < matches1.length; i++) {
+          //console.log(matches1[i]);
+          if (matches1[i].includes("-")) {
+            let Week = sessionRegex.exec(matches1[i]);
+            console.log(parseInt(Week[1]));
+            console.log(parseInt(Week[2]));
+            if (
+              (parseInt(Week[1]) <= parseInt(selectWeek[0])) &
+              (parseInt(Week[2]) >= parseInt(selectWeek[0]))
+            )
+              work++;
           } else {
-            //渲染第2-4节和6-8节的课程
-            if (session1 == 0.5 || session1 == 2.5) {
-              let n = Math.ceil(session1);
-              if (session1 == 0.5) {
-                this.cla[weekDate].lesson[n].marginTop = session1 * 200;
-              } else {
-                let k = 0;
-                for (let i = 0; i < 2; i++) {
-                  if (this.cla[weekDate].lesson[i].course.courseName != "") {
-                    k = i + 1;
-                  }
-                }
-                this.cla[weekDate].lesson[n].marginTop = (session1 - k) * 200;
-                //修改下一个课程
-                if (this.cla[weekDate].lesson[n + 1].course.courseName != "") {
-                  this.cla[weekDate].lesson[n + 1].marginTop = 0;
-                }
-              }
-            } else {
+            if (parseInt(matches1[i]) == parseInt(selectWeek[0])) work++;
+          }
+        }
+        console.log(work);
+        //-------------------------------------------------------------------------
+        if (work > parseInt(0)) {
+          let matches = sessionRegex.exec(this.data[i].session);
+          const classlong = (matches[2] - matches[1] + 1) * 100;
+          const weekDate = this.data[i].weekDate;
+          const session = parseInt(matches[1], 10);
+          const session1 = (session - 1) / 2;
+          //渲染到对应位置,未采用定位，根据前一个元素判断渲染到哪个位置
+          //渲染第1-2节的课
+          if (session1 == 0) {
+            this.cla[weekDate].lesson[session1].marginTop = (session - 1) * 100;
+          } else {
+            //渲染第9-10节的课
+            if (session1 == 4) {
               let k = 0;
-              for (let j = 0; j < session1; j++) {
+              for (let j = 0; j < 4; j++) {
                 if (this.cla[weekDate].lesson[j].course.courseName != "") {
                   k = j + 1;
                 }
               }
-              this.cla[weekDate].lesson[(session - 1) / 2].marginTop =
+              this.cla[weekDate].lesson[session1].marginTop =
                 (session1 - k) * 200;
-              let k1 = 0;
-              let j = 0;
-              for (j = 4; j > session1; j--) {
-                if (this.cla[weekDate].lesson[j].course.courseName != "") {
-                  k1 = j;
-                }
-              }
-              if (k1 != 0) {
-                const matches1 = sessionRegex.exec(
-                  this.cla[weekDate].lesson[k1].course.session
-                );
-                if (matches1[1] != 6) {
-                  this.cla[weekDate].lesson[k1].marginTop =
-                    (k1 - session1) * 200 - classlong;
+            } else {
+              //渲染第2-4节和6-8节的课程
+              if (session1 == 0.5 || session1 == 2.5) {
+                let n = Math.ceil(session1);
+                if (session1 == 0.5) {
+                  this.cla[weekDate].lesson[n].marginTop = session1 * 200;
                 } else {
-                  this.cla[weekDate].lesson[k1].marginTop =
-                    (k1 - session1 - parseFloat(0.5)) * 200 - classlong;
+                  let k = 0;
+                  for (let i = 0; i < 2; i++) {
+                    if (this.cla[weekDate].lesson[i].course.courseName != "") {
+                      k = i + 1;
+                    }
+                  }
+                  this.cla[weekDate].lesson[n].marginTop = (session1 - k) * 200;
+                  //修改下一个课程
+                  if (
+                    this.cla[weekDate].lesson[n + 1].course.courseName != ""
+                  ) {
+                    this.cla[weekDate].lesson[n + 1].marginTop = 0;
+                  }
+                }
+              } else {
+                let k = 0;
+                for (let j = 0; j < session1; j++) {
+                  if (this.cla[weekDate].lesson[j].course.courseName != "") {
+                    k = j + 1;
+                  }
+                }
+                this.cla[weekDate].lesson[session1].marginTop =
+                  (session1 - k) * 200;
+                let k1 = 0;
+                let j = 0;
+                for (j = 4; j > session1; j--) {
+                  if (this.cla[weekDate].lesson[j].course.courseName != "") {
+                    k1 = j;
+                  }
+                }
+                if (k1 != 0) {
+                  const matches1 = sessionRegex.exec(
+                    this.cla[weekDate].lesson[k1].course.session
+                  );
+                  if (matches1[1] != 6) {
+                    this.cla[weekDate].lesson[k1].marginTop =
+                      (k1 - session1) * 200 - classlong;
+                  } else {
+                    this.cla[weekDate].lesson[k1].marginTop =
+                      (k1 - session1 - parseFloat(0.5)) * 200 - classlong;
+                  }
                 }
               }
             }
           }
+          //渲染课程名
+          this.cla[weekDate].lesson[Math.ceil(session1)].course.courseName =
+            this.data[i].courseName;
+          //渲染课程地点
+          this.cla[weekDate].lesson[Math.ceil(session1)].course.classRoom =
+            "@" + this.data[i].classRoom;
+          //渲染课程教师名称
+          this.cla[weekDate].lesson[Math.ceil(session1)].course.teacher =
+            "@" + this.data[i].teacher;
+          //渲染课程长度
+          this.cla[weekDate].lesson[Math.ceil(session1)].height = classlong;
+          //课程节数赋值
+          this.cla[weekDate].lesson[Math.ceil(session1)].course.session =
+            this.data[i].session;
+          //随机选取颜色
+          const n = Math.floor(Math.random() * this.getcolor.length);
+          this.cla[weekDate].lesson[Math.ceil(session1)].color =
+            this.getcolor[n];
         }
-        //渲染课程名
-        this.cla[weekDate].lesson[
-          Math.ceil((session - 1) / 2)
-        ].course.courseName = this.data[i].courseName;
-        //渲染课程地点
-        this.cla[weekDate].lesson[
-          Math.ceil((session - 1) / 2)
-        ].course.classRoom = "@" + this.data[i].classRoom;
-        //渲染课程教师名称
-        this.cla[weekDate].lesson[Math.ceil((session - 1) / 2)].course.teacher =
-          "@" + this.data[i].teacher;
-        //渲染课程长度
-        this.cla[weekDate].lesson[Math.ceil((session - 1) / 2)].height =
-          classlong;
-        //课程节数赋值
-        this.cla[weekDate].lesson[Math.ceil((session - 1) / 2)].course.session =
-          this.data[i].session;
-        //随机选取颜色
-        const n = Math.floor(Math.random() * this.getcolor.length);
-        this.cla[weekDate].lesson[Math.ceil((session - 1) / 2)].color =
-          this.getcolor[n];
       }
     },
+    //---------------------------------------------------------------------
     signIn(index1, index2) {
-      this.display1 = "block";
-      console.log(index1 + "--" + index2);
-      const course = this.cla[index1].lesson[index2].course;
-      this.ClickCourseName = course.courseName;
-      this.ClickClassRoom = course.classRoom;
-      this.ClickTeacher = course.teacher;
+      if (this.cla[index1].lesson[index2].course.courseName != "") {
+        this.display1 = "block";
+        const course = this.cla[index1].lesson[index2].course;
+        this.ClickCourseName = course.courseName;
+        this.ClickClassRoom = course.classRoom;
+        this.ClickTeacher = course.teacher;
+      }
     },
+    //---------------------------------------------------------------------
     cancelTanchuang() {
       this.display1 = "none";
     },
     // 跳转到签到页面
+    //---------------------------------------------------------------------
     toLogin() {
       uni.switchTab({
         url: "/pages/index/index",
