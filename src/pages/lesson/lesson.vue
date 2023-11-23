@@ -1,17 +1,21 @@
 <template>
   <view>
     <!-- 导航栏 -->
-    <view class="nav">
+    <view class="nav" :style="{ height: screensafe + parseInt(150) + 'rpx' }">
       <picker
         class="xuanzhe"
         @change="changeweek($event, week)"
         :value="index"
         :range="week"
         :range-key="'wee'"
+        :style="{ marginTop: screensafe + parseInt(70) + 'rpx' }"
         >{{ beginweek }}
       </picker>
     </view>
-    <view class="empty"></view>
+    <view
+      class="empty"
+      :style="{ height: screensafe + parseInt(150) + 'rpx' }"
+    ></view>
     <!-- 日期 -->
     <view class="date1">
       <view
@@ -93,6 +97,7 @@ export default Vue.extend({
       ClickTeacher: "",
       ClickColor: "",
       data: "",
+      screensafe: "",
       //存储当前周数
       NowWeek: "",
       getcolor: [
@@ -106,6 +111,9 @@ export default Vue.extend({
         "#2cb5fc",
         "#ff8f6b",
         "#dcd0ff",
+        "#32c9de",
+        "#16ae9c",
+        "#f5de19",
       ],
       week: [
         { id: 1, wee: "第1周" },
@@ -973,11 +981,16 @@ export default Vue.extend({
   },
   mounted() {
     this.getweek();
+    this.safe();
     // this.getLesson();
   },
   computed: {},
   methods: {
     //突出当前时间
+    safe() {
+      const { safeAreaInsets } = uni.getSystemInfoSync();
+      this.screensafe = safeAreaInsets.top;
+    },
     breakout(NowWeek) {
       const date1 = new Date();
       if (NowWeek == this.NowWeek) {
@@ -1065,6 +1078,7 @@ export default Vue.extend({
     //渲染课程
     //---------------------------------------------------------------------
     getLesson() {
+      let n;
       for (let i = 0; i < this.data.length; i++) {
         //正则表达式提取数字
         const pattern = /\d+-\d+|\d+/g;
@@ -1073,14 +1087,11 @@ export default Vue.extend({
         let work = 0;
         let matches1 = this.data[i].weekTimes.match(pattern);
         let selectWeek = this.beginweek.match(pattern1);
-        console.log(parseInt(selectWeek[0]));
         //判断该周是否有该课程
         for (let i = 0; i < matches1.length; i++) {
           //console.log(matches1[i]);
           if (matches1[i].includes("-")) {
             let Week = sessionRegex.exec(matches1[i]);
-            console.log(parseInt(Week[1]));
-            console.log(parseInt(Week[2]));
             if (
               (parseInt(Week[1]) <= parseInt(selectWeek[0])) &
               (parseInt(Week[2]) >= parseInt(selectWeek[0]))
@@ -1179,9 +1190,17 @@ export default Vue.extend({
           this.cla[weekDate].lesson[Math.ceil(session1)].course.session =
             this.data[i].session;
           //随机选取颜色
-          const n = Math.floor(Math.random() * this.getcolor.length);
-          this.cla[weekDate].lesson[Math.ceil(session1)].color =
-            this.getcolor[n];
+          let tof = true;
+          while (tof) {
+            console.log(1);
+            let n1 = Math.floor(Math.random() * this.getcolor.length);
+            if (n != n1) {
+              n = n1;
+              this.cla[weekDate].lesson[Math.ceil(session1)].color =
+                this.getcolor[n];
+              tof = false;
+            }
+          }
         }
       }
     },
