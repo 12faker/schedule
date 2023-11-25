@@ -1,6 +1,9 @@
 <template>
   <view>
-    <view></view>
+    <view
+      ><button class="a" @tap="phoneWH()">点击</button>
+      <button class="b" @tap="phoneWH()">点击</button></view
+    >
   </view>
 </template>
 
@@ -14,9 +17,26 @@ export default Vue.extend({
   onLoad() {},
   onReady() {},
   mounted() {},
-  methods: {},
+  methods: {
+    phoneWH() {
+      // 获取系统信息
+      uni.getSystemInfo({
+        success: function (res) {
+          console.log(res.windowWidth);
+          console.log(res.windowHeight);
+        },
+      });
+    },
+  },
   computed: {},
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+view .a {
+  height: 100px;
+}
+view .b {
+  height: 150rpx;
+}
+</style>
